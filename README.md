@@ -8,3 +8,5 @@ simulator so as to be able to simulate a complete system comprised of a number o
 (OS). As a result, the user can verify his/her application in a cycle-accurate manner via whole system simulation, including
 memory hierarchy, caches, peripherals, etc, with full operating system interaction (e.g. scheduler, drivers etc.), thus making
 the simulation more realistic/accurate.
+
+More important, ACSIM Simulation Framework can be an extension of an open-source COSSIM framework in order to produce a complete Novel, Simulator for Heterogeneous Parallel and Distributed Systems utilizing Custom Hardware Accelerators.
