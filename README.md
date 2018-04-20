@@ -9,4 +9,5 @@ simulator so as to be able to simulate a complete system comprised of a number o
 memory hierarchy, caches, peripherals, etc, with full operating system interaction (e.g. scheduler, drivers etc.), thus making
 the simulation more realistic/accurate.
 
-More important, ACSIM Simulation Framework can be an extension of an open-source COSSIM framework in order to produce a complete Novel, Simulator for Heterogeneous Parallel and Distributed Systems utilizing Custom Hardware Accelerators.
+ACSIM is an extension of the COSSIM simulation framework and it integrates, in a novel and efficient way,
+a combined system and network simulator with a SystemC simulator, in a transparent to the end-used way.
