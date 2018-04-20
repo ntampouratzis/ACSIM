@@ -1,0 +1,174 @@
+/*
+ * Hisilicon Ltd. HiP01 SoC
+ *
+ * Copyright (C) 2013-2014 Hisilicon Ltd.
+ * Copyright (C) 2013-2014 Linaro Ltd.
+ *
+ * Author: Haojian Zhuang <haojian.zhuang@linaro.org>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * publishhed by the Free Software Foundation.
+ */
+
+#include <dt-bindings/clock/hip04-clock.h>
+
+/ {
+	/* memory bus is 64-bit */
+	#address-cells = <2>;
+	#size-cells = <1>;
+
+	aliases {
+		serial0 = &uart0;
+	};
+
+	cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		cpu@0 {
+			device_type = "cpu";
+			compatible = "arm,cortex-a15";
+			reg = <0>;
+		};
+	};
+
+	soc {
+		/* It's a 32-bit SoC. */
+		#address-cells = <1>;
+		#size-cells = <1>;
+		compatible = "arm,amba-bus", "simple-bus";
+		device_type = "soc";
+		interrupt-parent = <&gic>;
+		ranges = <0 0 0xe0000000 0x10000000>;
+
+		gic: interrupt-controller@c01000 {
+			compatible = "arm,cortex-a15-gic";
+			#interrupt-cells = <3>;
+			#address-cells = <0>;
+			interrupt-controller;
+
+			/* gic dist base, gic cpu base */
+			reg = <0xc01000 0x1000>, <0xc02000 0x1000>;
+		};
+
+		mcpm: mcpm {
+			compatible = "hisilicon,hip04-mcpm";
+			reg = <0x100 0x1000>, <0x3e00000 0x00100000>,
+			      <0x302a000 0x1000>;
+		};
+
+		clock: clock {
+			compatible = "hisilicon,hip04-clock";
+			/* FIXME: the base of clock controller */
+			reg = <0 0x1000>;
+			#clock-cells = <1>;
+		};
+
+		dual_timer0: dual_timer@3000000 {
+			compatible = "arm,sp804", "arm,primecell";
+			reg = <0x3000000 0x1000>;
+			interrupts = <0 224 4>;
+			clocks = <&clock HIP04_CLK_50M>;
+			clock-names = "apb_pclk";
+			status = "ok";
+		};
+
+		arm-pmu {
+			compatible = "arm,cortex-a15-pmu";
+			interrupts = <0 64 4>,
+				     <0 65 4>,
+				     <0 66 4>,
+				     <0 67 4>,
+				     <0 68 4>,
+				     <0 69 4>,
+				     <0 70 4>,
+				     <0 71 4>,
+				     <0 72 4>,
+				     <0 73 4>,
+				     <0 74 4>,
+				     <0 75 4>,
+				     <0 76 4>,
+				     <0 77 4>,
+				     <0 78 4>,
+				     <0 79 4>;
+		};
+
+		timer {
+			compatible = "arm,armv7-timer";
+			interrupts = <1 13 0xf08>,
+				     <1 14 0xf08>,
+				     <1 11 0xf08>,
+				     <1 10 0xf08>;
+		};
+
+		uart0: uart@4007000 {
+			compatible = "snps,dw-apb-uart";
+			reg = <0x4007000 0x1000>;
+			interrupts = <0 381 4>;
+			clocks = <&clock HIP04_CLK_168M>;
+			clock-names = "uartclk";
+			reg-shift = <2>;
+			status = "disabled";
+		};
+
+		sata@a000000 {
+			compatible = "hisilicon,hisi-ahci";
+			reg = <0xa000000 0x1000000>;
+			interrupts = <0 372 4>;
+		};
+
+		mdio {
+			compatible = "hisilicon,hip04-mdio";
+			reg = <0x28f1000 0x1000>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			phy0: ethernet-phy@0 {
+				reg = <0>;
+				marvell,reg-init = <18 0x14 0 0x8001>;
+				device_type = "ethernet-phy";
+			};
+
+			phy1: ethernet-phy@1 {
+				reg = <1>;
+				marvell,reg-init = <18 0x14 0 0x8001>;
+				device_type = "ethernet-phy";
+			};
+		};
+
+		ppebase: ppebase@28c0000 {
+			compatible = "hisilicon,hip04-ppebase";
+			reg = <0x28c0000 0x10000>;
+		};
+
+		fe: ethernet@28b0000 {
+			compatible = "hisilicon,hip04-mac";
+			reg = <0x28b0000 0x10000>;
+			interrupts = <0 413 4>;
+			port = <31>;
+			speed = <100>;
+			id = <0>;
+		};
+
+		ge0: ethernet@2800000 {
+			compatible = "hisilicon,hip04-mac";
+			reg = <0x2800000 0x10000>;
+			interrupts = <0 402 4>;
+			port = <0>;
+			speed = <1000>;
+			id = <1>;
+			phy-handle = <&phy0>;
+		};
+
+		ge8: ethernet@2880000 {
+			compatible = "hisilicon,hip04-mac";
+			reg = <0x2880000 0x10000>;
+			interrupts = <0 410 4>;
+			port = <8>;
+			speed = <1000>;
+			id = <2>;
+			phy-handle = <&phy1>;
+		};
+	};
+};
