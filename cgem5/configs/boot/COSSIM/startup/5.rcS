@@ -1,0 +1,26 @@
+#!/bin/sh
+SERVER=10.0.1.2
+CLIENT=10.0.6.2
+
+echo "setting up network..."
+ifconfig lo 127.0.0.1
+ifconfig eth0 $CLIENT txqueuelen 1000
+ifconfig eth0 netmask 255.255.255.0           	  #Configure the Netmask
+route add default gw 10.0.6.1                     #Configure the Gateway
+
+#echo "0" > /proc/sys/net/ipv4/tcp_timestamps
+#echo "0" > /proc/sys/net/ipv4/tcp_sack
+#echo "5000000 5000000 1000" > /proc/sys/net/ipv4/tcp_rmem
+#echo "5000000 5000000 1000" > /proc/sys/net/ipv4/tcp_wmem
+#echo "5000000 5000000 1000" > /proc/sys/net/ipv4/tcp_mem
+#echo "262143" > /proc/sys/net/core/rmem_max
+#echo "262143" > /proc/sys/net/core/wmem_max
+#echo "262143" > /proc/sys/net/core/rmem_default
+#echo "262143" > /proc/sys/net/core/wmem_default
+#echo "262143" > /proc/sys/net/core/optmem_max
+#echo "100000" > /proc/sys/net/core/netdev_max_backlog
+
+sleep 1
+ping -c 1 $SERVER
+
+m5 exit

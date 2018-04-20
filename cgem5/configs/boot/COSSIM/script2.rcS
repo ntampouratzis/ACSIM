@@ -1,0 +1,18 @@
+#!/bin/sh
+ifconfig lo 127.0.0.1                             #Configure the localhost
+ifconfig eth0 10.0.3.2                            #Configure the Ethernet
+ifconfig eth0 netmask 255.255.255.0               #Configure the Netmask
+route add default gw 10.0.3.1                     #Configure the Gateway
+export PATH=/usr/lib/jvm/java-7-sun/bin:$PATH     #Export the Java Path
+ulimit -c unlimited
+#m5 resetstats
+
+sleep 5
+# Here you can put your application
+./AccelClient 10.0.1.2 60401
+# END Here you can put your application
+
+#m5 dumpstats
+#sync           #(for X86)
+#busybox sync   #(for ARM)
+#/sbin/m5 exit

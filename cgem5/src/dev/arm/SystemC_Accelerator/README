@@ -1,0 +1,18 @@
+How to add an accelerator
+
+1) Create a folder with devx and copy the 4 files from dev0
+2) Rename the AccelDevice0.cc|hh & SystemCDevice0.cc|hh according to the dev number
+3) Replace the keyword "AccelDevice0" inside the AccelDevice0.cc|hh according to the dev number 
+4) Replace the 433 line in AccelDevice0.cc & Check the line 47 in AccelDevice0.cc
+5) Check the line 56 & 61 in AccelDevice0.hh
+6) Add the files in Sconscript
+7) Copy and configure the class AccelDevice0 & attachACCDevice in /gem5/src/dev/arm/RealView.py
+
+
+SystemCDevice0 ConnectToSystemC0
+signals in 290-336
+variables 59-70
+SystemCInitialization0
+AccelThread0
+
+

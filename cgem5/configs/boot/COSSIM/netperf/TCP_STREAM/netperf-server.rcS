@@ -1,0 +1,94 @@
+#!/bin/sh
+SERVER=10.0.1.2
+CLIENT1=10.0.2.2
+CLIENT2=10.0.3.2
+CLIENT3=10.0.4.2
+CLIENT4=10.0.5.2
+CLIENT5=10.0.6.2
+CLIENT6=10.0.7.2
+CLIENT7=10.0.8.2
+CLIENT8=10.0.9.2
+CLIENT9=10.0.10.2
+CLIENT10=10.0.11.2
+CLIENT11=10.0.12.2
+CLIENT12=10.0.13.2
+CLIENT13=10.0.14.2
+CLIENT14=10.0.15.2
+CLIENT15=10.0.16.2
+CLIENT16=10.0.17.2
+CLIENT17=10.0.18.2
+CLIENT18=10.0.19.2
+CLIENT19=10.0.20.2
+CLIENT20=10.0.21.2
+CLIENT21=10.0.22.2
+CLIENT22=10.0.23.2
+CLIENT23=10.0.24.2
+CLIENT24=10.0.25.2
+CLIENT25=10.0.26.2
+CLIENT26=10.0.27.2
+CLIENT27=10.0.28.2
+CLIENT28=10.0.29.2
+CLIENT29=10.0.30.2
+CLIENT30=10.0.31.2
+CLIENT31=10.0.32.2
+CLIENT32=10.0.33.2
+
+echo "setting up network..."
+ifconfig lo 127.0.0.1
+ifconfig eth0 $SERVER txqueuelen 1000
+ifconfig eth0 netmask 255.255.255.0               #Configure the Netmask
+route add default gw 10.0.1.1                     #Configure the Gateway
+
+#echo "0" > /proc/sys/net/ipv4/tcp_timestamps
+#echo "0" > /proc/sys/net/ipv4/tcp_sack
+#echo "5000000 5000000 1000" > /proc/sys/net/ipv4/tcp_rmem
+#echo "5000000 5000000 1000" > /proc/sys/net/ipv4/tcp_wmem
+#echo "5000000 5000000 1000" > /proc/sys/net/ipv4/tcp_mem
+#echo "262143" > /proc/sys/net/core/rmem_max
+#echo "262143" > /proc/sys/net/core/wmem_max
+#echo "262143" > /proc/sys/net/core/rmem_default
+#echo "262143" > /proc/sys/net/core/wmem_default
+#echo "262143" > /proc/sys/net/core/optmem_max
+#echo "100000" > /proc/sys/net/core/netdev_max_backlog
+
+echo "running netserver..."
+/netperf-2.7.0/src/netserver
+
+echo -n "signal client1 to begin..."
+sleep 1
+echo "server ready" | netcat -c $CLIENT1 8000
+#echo "server ready" | netcat -c $CLIENT2 8000
+#echo "server ready" | netcat -c $CLIENT3 8000
+#echo "server ready" | netcat -c $CLIENT4 8000
+#echo "server ready" | netcat -c $CLIENT5 8000
+#echo "server ready" | netcat -c $CLIENT6 8000
+#echo "server ready" | netcat -c $CLIENT7 8000
+#echo "server ready" | netcat -c $CLIENT8 8000
+#echo "server ready" | netcat -c $CLIENT9 8000
+#echo "server ready" | netcat -c $CLIENT10 8000
+#echo "server ready" | netcat -c $CLIENT11 8000
+#echo "server ready" | netcat -c $CLIENT12 8000
+#echo "server ready" | netcat -c $CLIENT13 8000
+#echo "server ready" | netcat -c $CLIENT14 8000
+#echo "server ready" | netcat -c $CLIENT15 8000
+#echo "server ready" | netcat -c $CLIENT16 8000
+#echo "server ready" | netcat -c $CLIENT17 8000
+#echo "server ready" | netcat -c $CLIENT18 8000
+#echo "server ready" | netcat -c $CLIENT19 8000
+#echo "server ready" | netcat -c $CLIENT20 8000
+#echo "server ready" | netcat -c $CLIENT21 8000
+#echo "server ready" | netcat -c $CLIENT22 8000
+#echo "server ready" | netcat -c $CLIENT23 8000
+#echo "server ready" | netcat -c $CLIENT24 8000
+#echo "server ready" | netcat -c $CLIENT25 8000
+#echo "server ready" | netcat -c $CLIENT26 8000
+#echo "server ready" | netcat -c $CLIENT27 8000
+#echo "server ready" | netcat -c $CLIENT28 8000
+#echo "server ready" | netcat -c $CLIENT29 8000
+#echo "server ready" | netcat -c $CLIENT30 8000
+#echo "server ready" | netcat -c $CLIENT31 8000
+#echo "server ready" | netcat -c $CLIENT32 8000
+
+
+echo "starting bash..."
+exec /bin/bash

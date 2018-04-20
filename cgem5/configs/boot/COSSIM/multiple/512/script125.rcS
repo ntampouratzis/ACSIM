@@ -1,0 +1,6 @@
+#!/bin/sh
+ifconfig lo 127.0.0.1
+ifconfig eth0 10.0.8.15
+ifconfig eth0 netmask 255.255.255.0
+route add default gw 10.0.8.1
+m5 exit
