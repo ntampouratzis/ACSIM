@@ -27,6 +27,10 @@ cd objdir
 ../configure --prefix=/usr/local/systemc-2.3.0
 make
 sudo make install
+
+echo "#SystemC 2.3.0 exports" >> ~/.bashrc
+echo "export SYSTEMC_HOME=/usr/local/systemc-2.3.0" >> ~/.bashrc
+echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/systemc-2.3.0/lib-linux64" >> ~/.bashrc
 ```
 
 
