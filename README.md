@@ -65,7 +65,28 @@ We provide you a reference [SystemC Accelerator](cgem5/src/dev/arm/SystemC_Accel
 
 The reference SystemC Accelerator is compiled with the cgem5, while we have implemented two scripts in order to build the User Space Application for [ARM-32](kernel_build/build32.sh) and [ARM-64](kernel_build/build64.sh).
 
+So, first of all, you need to compile one of your prefered ARM kernel using, and finally to execute them.
 
 
+### ARM-32
+The following script compliles the kernel with [User Application](Application/TestApp.c) and mount it inside the linux-aarch32-ael.img. In addition, it creates vmlinux.aarch32.Accel and put it in kernels/binaries directory.
+```
+cd $HOME/ACSIM/kernel_build
+./build32.sh
+cd $HOME/ACSIM/cgem5
+./run32.sh
+```
 
+### ARM-64
+The following script compliles the kernel with [User Application](Application/TestApp.c) and mount it inside the aarch64-ubuntu-trusty-headless.img. In addition, it creates vmlinux.aarch64.Accel and put it in kernels/binaries directory.
+```
+cd $HOME/ACSIM/kernel_build
+./build64.sh
+cd $HOME/ACSIM/cgem5
+./run64.sh
+```
+
+Finally, in order to execute the ACSIM, we have implemented the following script
+
+## Acknowledgement
 Our work is published in this paper: T. Nikolaos, K. Georgopoulos and Y. Papaefstathiou, "A novel way to efficiently simulate complex full systems incorporating hardware accelerators," Design, Automation & Test in Europe Conference & Exhibition (DATE), 2017, Lausanne, 2017, pp. 658-661.
