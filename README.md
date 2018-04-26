@@ -37,9 +37,9 @@ source ~/.bashrc
 
 
 ### Installing cgem5
-Download in your /home directory the project and follow the instructions:
 
 ```
+cd $HOME
 git clone https://github.com/ntampouratzis/ACSIM
 echo "#GEM5 exports" >> ~/.bashrc
 echo "export GEM5=$HOME/ACSIM/cgem5" >> ~/.bashrc
@@ -53,7 +53,7 @@ scons build/ARM/gem5.opt -j4
 
 
 ### Download and copy the kernels
-Download the kernels.tar.gz and put it in your /home directory from [here](http://kition.mhl.tuc.gr:8000/f/a16324207b/) (it includes gem5 images and kernels).
+Download the kernels.tar.gz and put it in your $HOME directory from [here](http://kition.mhl.tuc.gr:8000/f/a16324207b/) (it includes gem5 images and kernels).
 
 ```
 mv $HOME/kernels.tar.gz $HOME/ACSIM
