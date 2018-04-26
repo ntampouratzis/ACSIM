@@ -1,1 +1,1 @@
-$GEM5/build/ARM/gem5.opt --listener-mode=on -r -d $GEM5/node0 $GEM5/configs/example/fs.py --kernel=vmlinux.aarch32.Accel --disk-image=linux-aarch32-ael.img --mem-size=2048MB --machine-type=VExpress_EMM --dtb=vexpress.aarch32.ll_20131205.0-gem5.1cpu.dtb --DeviceClock=500MHz
+$GEM5/build/ARM/gem5.opt --listener-mode=on $GEM5/configs/example/fs.py --kernel=vmlinux.aarch32.Accel --disk-image=linux-aarch32-ael.img --mem-size=2048MB --machine-type=VExpress_EMM --dtb=vexpress.aarch32.ll_20131205.0-gem5.1cpu.dtb --DeviceClock=500MHz
