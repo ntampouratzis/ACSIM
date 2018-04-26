@@ -13,7 +13,7 @@ The cgem5 repository includes the modified gem5 simulator that ipmlements the AC
 ## kernel_build Repository
 The kernel_build repository includes both ARM-32 and ARM-64 source kernel files with a refernce application. 
 
-## How to install the ACSIM?
+## ACSIM Installation
 
 ### Download and install SystemC 2.3.0
 
