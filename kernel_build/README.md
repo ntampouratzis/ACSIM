@@ -21,13 +21,13 @@ Please refer to [Kernel Driver](linux-arm64-gem5/kernel/SystemC_driver.c) and [U
 Finally, we have implement a reference [User Application](Application/TestApp.c) in order to call our Accelerator.
 
 ## Build the ARM-32 Kernel
-The following script compliles the kernel with [User Application](Application/TestApp.c) and mount it inside the 32bit .img
+The following script compliles the kernel with [User Application](Application/TestApp.c) and mount it inside the linux-aarch32-ael.img. In addition, it creates vmlinux.aarch32.Accel and put it in kernels/binaries directory.
 ```
 ./build32.sh
 ```
 
 ## Build the ARM-64 Kernel
-The following script compliles the kernel with [User Application](Application/TestApp.c) and mount it inside the 64bit .img
+The following script compliles the kernel with [User Application](Application/TestApp.c) and mount it inside the aarch64-ubuntu-trusty-headless.img. In addition, it creates vmlinux.aarch64.Accel and put it in kernels/binaries directory.
 ```
 ./build64.sh
 ```
