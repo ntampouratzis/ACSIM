@@ -86,7 +86,11 @@ cd $HOME/ACSIM/cgem5
 ./run64.sh
 ```
 
-Finally, in order to execute the ACSIM, we have implemented the following script
+Finally, after Linux has been booted, you can simple execute the following from inside the Linux.
+```
+./AccelApp
+```
+
 
 ## Acknowledgement
 Our work is published in this paper: T. Nikolaos, K. Georgopoulos and Y. Papaefstathiou, "A novel way to efficiently simulate complex full systems incorporating hardware accelerators," Design, Automation & Test in Europe Conference & Exhibition (DATE), 2017, Lausanne, 2017, pp. 658-661.
