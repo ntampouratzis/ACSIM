@@ -3,7 +3,7 @@
  * All rights reserved.
  * 
  * ----------------------------------------------------------------------------
- * Buddy Dynamic Memory Allocator
+ * Reference Accelerator Module
  * Copyright (c) 2018, H2020 ECOSCALE.
  * Copyright (c) 2018, Telecommunications Systems Institute.
  * ----------------------------------------------------------------------------
