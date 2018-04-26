@@ -31,8 +31,33 @@ sudo make install
 echo "#SystemC 2.3.0 exports" >> ~/.bashrc
 echo "export SYSTEMC_HOME=/usr/local/systemc-2.3.0" >> ~/.bashrc
 echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/systemc-2.3.0/lib-linux64" >> ~/.bashrc
+
+source ~/.bashrc
 ```
 
+
+### Installing cgem5
+
+```
+echo "#GEM5 exports" >> ~/.bashrc
+echo "export GEM5=$HOME/ACSIM/cgem5" >> ~/.bashrc
+echo "export M5_PATH=$HOME/ACSIM/kernels" >> ~/.bashrc
+
+source ~/.bashrc
+cd $HOME/ACSIM/cgem5
+source ~/.bashrc
+scons build/ARM/gem5.opt -j4
+```
+
+
+### Download and copy the kernels
+Download the kernels.tar.gz which includes both kernels and images.
+
+```
+mv $HOME/kernels.tar.gz $HOME/ACSIM
+cd $HOME/ACSIM
+tar -zxvf kernels.tar.gz
+```
 
 
 Our work is published in this paper: T. Nikolaos, K. Georgopoulos and Y. Papaefstathiou, "A novel way to efficiently simulate complex full systems incorporating hardware accelerators," Design, Automation & Test in Europe Conference & Exhibition (DATE), 2017, Lausanne, 2017, pp. 658-661.
