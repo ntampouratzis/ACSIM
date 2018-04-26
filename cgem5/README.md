@@ -6,4 +6,9 @@ The cgem5 repository includes the modified gem5 simulator that ipmlements the AC
 The following subsections describes in tandem the modifications and extensions that have been implemented for ACSIM. In addition, this repository contains all the COSSIM-modifications as described in [COSSIM_cgem5](https://github.com/H2020-COSSIM/cgem5) repository.
 
 ### Accelerator Wrapper
-Our Accelerator Wrapper device was developed in order to achieve efficient communication and synchronisation of GEM5 with the SystemC accelerator. It inherits all GEM5 DMA device characteristics so that full DMA transactions utilizing the full operating system can be performed. In addition, it contains a large Device Memory to store the data from the OS memcpy, simulating the DDR memory found in most of the real systems incorporating PCI-connected FPGA and/or GPU boards. Subsequently, a core containing mixed C++ and SystemC code was implemented for the connection of the GEM5 C++ functions and the accelerator’s SystemC threads, as illustrated in the ![alt text](https://github.com/ntampouratzis/ACSIM/blob/master/cgem5/ACSIM_Figure.png)
+Our Accelerator Wrapper device was developed in order to achieve efficient communication and synchronisation of GEM5 with the SystemC accelerator. It inherits all GEM5 DMA device characteristics so that full DMA transactions utilizing the full operating system can be performed. In addition, it contains a large Device Memory to store the data from the OS memcpy, simulating the DDR memory found in most of the real systems incorporating PCI-connected FPGA and/or GPU boards. Subsequently, a core containing mixed C++ and SystemC code was implemented for the connection of the GEM5 C++ functions and the accelerator’s SystemC threads, as illustrated in the following Figure. ![alt text](https://github.com/ntampouratzis/ACSIM/blob/master/cgem5/ACSIM_Figure.png)
+
+
+<p align="center">
+  <img src="https://github.com/ntampouratzis/ACSIM/blob/master/cgem5/ACSIM_Figure.png" width="350"/>
+</p>
