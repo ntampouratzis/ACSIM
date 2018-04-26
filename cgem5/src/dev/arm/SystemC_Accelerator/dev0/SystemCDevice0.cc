@@ -214,7 +214,3 @@ void SystemCDevice0::main_thread(){
   }
   
 }
-
-
-
-//SC_MODULE_EXPORT(SystemCDevice);
