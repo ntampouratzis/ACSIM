@@ -61,7 +61,7 @@ tar -zxvf kernels.tar.gz
 ```
 
 ## How to execute ACSIM?
-We provide you a reference [SystemC Accelerator](cgem5/src/dev/arm/SystemC_Accelerator/dev0/AccelDevice0.cc) in order to execute the ACSIM environment as well as a User Space [Application](kernel_build/Application/TestApp.c) which calls the Accelerator from gem5 OS.
+We provide you a reference [SystemC Accelerator](cgem5/src/dev/arm/SystemC_Accelerator/dev0/SystemCDevice0.cc) in order to execute the ACSIM environment as well as a User Space [Application](kernel_build/Application/TestApp.c) which calls the Accelerator from gem5 OS.
 
 The reference SystemC Accelerator is compiled with the cgem5, while we have implemented two scripts in order to build the User Space Application for [ARM-32](kernel_build/build32.sh) and [ARM-64](kernel_build/build64.sh).
 
