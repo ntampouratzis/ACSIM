@@ -38,7 +38,7 @@ user can define through one parameter the amount of data to be read/written in o
 
 
 ### SystemC Accelerator
-A reference SystemC accelerator has been developed in order to evaluate the Accelerator Wrapper and the Linux Kernel Drivers; this is also a helpful guideline for designers/users that expect to develop their own SystemC accelerators. Subsequently, the Accelera open-source libraries have been incorporated with the GEM5 SCons construction tool in order to allow for the compilation and execution of complete system applications. 
+A reference [SystemC accelerator](src/dev/arm/SystemC_Accelerator/dev0/SystemCDevice0.cc) has been developed in order to evaluate the Accelerator Wrapper and the Linux Kernel Drivers; this is also a helpful guideline for designers/users that expect to develop their own SystemC accelerators. Subsequently, the Accelera open-source libraries have been incorporated with the GEM5 SCons construction tool in order to allow for the compilation and execution of complete system applications. 
 
 The SystemC accelerator consists of a main SystemC thread and two SystemC functions described below:
 
