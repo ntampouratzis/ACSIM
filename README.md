@@ -52,7 +52,7 @@ scons build/ARM/gem5.opt -j4
 
 
 ### Download and copy the kernels
-Download the kernels.tar.gz and put it in your $HOME directory from [here](http://kition.mhl.tuc.gr:8000/f/a16324207b/) (it includes gem5 images and kernels).
+Download the kernels.tar.gz from [here](http://kition.mhl.tuc.gr:8000/f/a16324207b/) and put it in your $HOME directory (it includes gem5 images and kernels).
 
 ```
 mv $HOME/kernels.tar.gz $HOME/ACSIM
