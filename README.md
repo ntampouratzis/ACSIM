@@ -45,7 +45,6 @@ echo "#GEM5 exports" >> ~/.bashrc
 echo "export GEM5=$HOME/ACSIM/cgem5" >> ~/.bashrc
 echo "export M5_PATH=$HOME/ACSIM/kernels" >> ~/.bashrc
 
-source ~/.bashrc
 cd $HOME/ACSIM/cgem5
 source ~/.bashrc
 scons build/ARM/gem5.opt -j4
@@ -61,7 +60,12 @@ cd $HOME/ACSIM
 tar -zxvf kernels.tar.gz
 ```
 
+## How to execute ACSIM?
+We provide you a reference [SystemC Accelerator](cgem5/src/dev/arm/SystemC_Accelerator/dev0/AccelDevice0.cc) in order to execute the ACSIM environment as well as a User Space [Application](kernel_build/Application/TestApp.c) which calls the Accelerator from gem5 OS.
+
+The reference SystemC Accelerator is compiled with the cgem5, while we have implemented two scripts in order to build the User Space Application for [ARM-32](kernel_build/build32.sh) and [ARM-64](kernel_build/build64.sh).
+
+
+
 
 Our work is published in this paper: T. Nikolaos, K. Georgopoulos and Y. Papaefstathiou, "A novel way to efficiently simulate complex full systems incorporating hardware accelerators," Design, Automation & Test in Europe Conference & Exhibition (DATE), 2017, Lausanne, 2017, pp. 658-661.
-
-
