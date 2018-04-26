@@ -35,7 +35,7 @@
  */
 
 /* @file
- * Accelerator Kernel Driver. You can referee in this paper 
+ * Accelerator UserSpace Driver. You can referee in this paper 
  * https://ieeexplore.ieee.org/document/7927071/
  */
 #include <stdio.h>
