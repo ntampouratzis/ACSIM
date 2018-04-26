@@ -13,6 +13,23 @@ The cgem5 repository includes the modified gem5 simulator that ipmlements the AC
 ## kernel_build Repository
 The kernel_build repository includes both ARM-32 and ARM-64 source kernel files with a refernce application. 
 
+## How to install the ACSIM?
+
+### Download and install SystemC 2.3.0
+
+```
+sudo wget -O systemc-2.3.0a.tar.gz http://www.accellera.org/images/downloads/standards/systemc/systemc-2.3.0a.tar.gz
+tar -xzvf systemc-2.3.0a.tar.gz
+cd systemc-2.3.0a
+sudo mkdir -p /usr/local/systemc-2.3.0/
+mkdir objdir
+cd objdir
+../configure --prefix=/usr/local/systemc-2.3.0
+make
+sudo make install
+```
+
+
 
 Our work is published in this paper: T. Nikolaos, K. Georgopoulos and Y. Papaefstathiou, "A novel way to efficiently simulate complex full systems incorporating hardware accelerators," Design, Automation & Test in Europe Conference & Exhibition (DATE), 2017, Lausanne, 2017, pp. 658-661.
 
