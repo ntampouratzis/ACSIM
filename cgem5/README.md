@@ -12,3 +12,26 @@ Our [Accelerator Wrapper](src/dev/arm/SystemC_Accelerator/dev0/AccelDevice0.cc) 
 <p align="center">
   <img src="https://github.com/ntampouratzis/ACSIM/blob/master/cgem5/ACSIM_Figure.png" />
 </p>
+
+The Accelerator Wrapper consists of, in total, eight C++ and SystemC-thread modules as described below:
+
+#### Dynamic Memory Allocator C++ Module 
+The Buddy dynamic memory allocation algorithm scheme is implemented in the Accelerator Wrapper to allocate and free Device Memory segments through the GEM5 operating system, similar to the cudaMalloc of NVIDIA GPUs.
+
+#### DMA Write/Read C++ Modules 
+Two Direct Memory Access engines were developed so that the GEM5 dma device can efficiently transfer high data volumes from the Linux driver to the Accelerator Wrapper and vise versa, similar to the cudaMemcpy of NVIDIA GPUs. The user can define, through
+one parameter, the delay of the DMA data transfer in order to achieve a realistic latency.
+
+#### Synchronisation Event C++ Module 
+A GEM5 synchronisation event function is implemented and it is triggered at every SystemC accelerator device cycle; the DeviceClock option (e.g. −−DeviceClock=500MHz) is also added to declare the device clock during the initialisation of GEM5.
+This function checks whether the SystemC accelerator has reached the next cycle. Finally, in case GEM5 is faster than the SystemC accelerator 1 , it reschedules the synchronisation event function in order to wait for the SystemC accelerator.
+
+#### Init SystemC Thread 
+The initialisation thread is implemented in SystemC so as to generate the reset and start signals both of which are essential for SystemC’s module execution. 
+
+#### Clock SystemC Thread 
+The clock thread is implemented in SystemC in order to generate the actual clock signal of the accelerator when called by GEM5’s OS; the DeviceClock option is used in order to define the clock frequency. Moreover, at every SystemC cycle, the full   synchronisation with GEM5 is achieved by checking whether the GEM5 has completed its tasks within this time frame.
+
+#### MemCpy ToDevice/ToHost SystemC Threads 
+Two MemCpy SystemC threads developed pass the data from the Wrapper Device Memory to the corresponding synthesisable I/O ports, which depend upon the data type, such as int, double, etc., so that they eventually arrive at the SystemC accelerator. The
+user can define through one parameter the amount of data to be read/written in one SystemC cycle.
