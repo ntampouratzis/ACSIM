@@ -35,3 +35,15 @@ The clock thread is implemented in SystemC in order to generate the actual clock
 #### 6) MemCpy ToDevice/ToHost SystemC Threads 
 Two MemCpy SystemC threads developed pass the data from the Wrapper Device Memory to the corresponding synthesisable I/O ports, which depend upon the data type, such as int, double, etc., so that they eventually arrive at the SystemC accelerator. The
 user can define through one parameter the amount of data to be read/written in one SystemC cycle.
+
+
+### SystemC Accelerator
+A reference SystemC accelerator has been developed in order to evaluate the Accelerator Wrapper and the Linux Kernel Drivers; this is also a helpful guideline for designers/users that expect to develop their own SystemC accelerators. Subsequently, the Accelera open-source libraries have been incorporated with the GEM5 SCons construction tool in order to allow for the compilation and execution of complete system applications. 
+
+The SystemC accelerator consists of a main SystemC thread and two SystemC functions described below:
+
+#### 1) Controller/Scheduler SystemC Thread 
+This is the main SystemC thread which is called by GEM5’s OS while the user has the ability to create as many individual cores as required so as to best serve his/her application, as represented in Figure 3 by the dashed-line threads. These threads are scheduled by the Controller/Scheduler SystemC Thread.
+
+#### 2) MemCpy ToDevice/ToHost SystemC functions 
+Two SystemC memcpy functions were implemented in order to allow for the efficient communication with the Accelerator Wrapper MemCpy SystemC Threads so as to transfer data from the Wrapper Device Memory to the accelerator’s memories.
