@@ -65,11 +65,11 @@ We provide you a reference [SystemC Accelerator](cgem5/src/dev/arm/SystemC_Accel
 
 The reference SystemC Accelerator is compiled with the cgem5, while we have implemented two scripts in order to build the User Space Application for [ARM-32](kernel_build/build32.sh) and [ARM-64](kernel_build/build64.sh).
 
-So, first of all, you need to compile one of your prefered ARM kernel using, and finally to execute them.
+So, you need to compile your prefered ARM kernel version using the following commands.
 
 
 ### ARM-32
-The following script compliles the kernel with [User Application](Application/TestApp.c) and mount it inside the linux-aarch32-ael.img. In addition, it creates vmlinux.aarch32.Accel and put it in kernels/binaries directory.
+The following script compliles the kernel with [User Application](Application/TestApp.c) and mount it inside the linux-aarch32-ael.img. In addition, it creates vmlinux.aarch32.Accel and put it in kernels/binaries directory. The 2nd script (run32.sh) executes the ACSIM with the ARM-32 Kernel.
 ```
 cd $HOME/ACSIM/kernel_build
 ./build32.sh
@@ -78,7 +78,7 @@ cd $HOME/ACSIM/cgem5
 ```
 
 ### ARM-64
-The following script compliles the kernel with [User Application](Application/TestApp.c) and mount it inside the aarch64-ubuntu-trusty-headless.img. In addition, it creates vmlinux.aarch64.Accel and put it in kernels/binaries directory.
+The following script compliles the kernel with [User Application](Application/TestApp.c) and mount it inside the aarch64-ubuntu-trusty-headless.img. In addition, it creates vmlinux.aarch64.Accel and put it in kernels/binaries directory. The 2nd script (run64.sh) executes the ACSIM with the ARM-64 Kernel.
 ```
 cd $HOME/ACSIM/kernel_build
 ./build64.sh
@@ -86,7 +86,7 @@ cd $HOME/ACSIM/cgem5
 ./run64.sh
 ```
 
-Finally, after Linux has been booted, you can simple execute the following from inside the Linux.
+Finally, after Linux has been booted, you can simple execute the following command from inside the Linux.
 ```
 ./AccelApp
 ```
