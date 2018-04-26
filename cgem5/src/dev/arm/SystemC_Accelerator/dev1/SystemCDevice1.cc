@@ -3,7 +3,7 @@
  * All rights reserved.
  * 
  * ----------------------------------------------------------------------------
- * Buddy Dynamic Memory Allocator
+ * Reference Accelerator Module
  * Copyright (c) 2018, H2020 ECOSCALE.
  * Copyright (c) 2018, Telecommunications Systems Institute.
  * ----------------------------------------------------------------------------
@@ -41,6 +41,7 @@
  * that will develop their own SystemC accelerators. You can referee in this paper 
  * https://ieeexplore.ieee.org/document/7927071/
  */
+
 
 #include "SystemCDevice1.hh"
 
