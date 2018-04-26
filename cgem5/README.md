@@ -10,5 +10,5 @@ Our Accelerator Wrapper device was developed in order to achieve efficient commu
 
 
 <p align="center">
-  <img src="https://github.com/ntampouratzis/ACSIM/blob/master/cgem5/ACSIM_Figure.png" width="350"/>
+  <img src="https://github.com/ntampouratzis/ACSIM/blob/master/cgem5/ACSIM_Figure.png" />
 </p>
