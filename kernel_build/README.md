@@ -19,3 +19,15 @@ Please refer to [Kernel Driver](linux-arm32-gem5/kernel/SystemC_driver.c) and [U
 Please refer to [Kernel Driver](linux-arm64-gem5/kernel/SystemC_driver.c) and [UserSpace Driver](linux-arm64-gem5/kernel/AccelDriver.c) for ARM-64.
 
 Finally, we have implement a reference [User Application](Application/TestApp.c) in order to call our Accelerator.
+
+## Build the ARM-32 Kernel
+
+```
+./build32.sh
+```
+
+## Build the ARM-64 Kernel
+
+```
+./build64.sh
+```
