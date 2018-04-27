@@ -1,4 +1,4 @@
-# ACSIM
+# ACSIM - A novel way to efficiently simulate complex full systems incorporating hardware accelerators
 This work presents a novel simulation environment comprised of a generic SystemC accelerator and probably the most widely known fullsystem
 simulator (i.e. GEM5). 
 
