@@ -88,8 +88,10 @@
 
 #define DEVICE_MEMORY_SIZE 536870912 //in bytes
 
-#define DEVICE_MEMORY_ENTRY_SIZE (64*65536)
+#define DEVICE_MEMORY_ENTRY_SIZE 65536
 #define DEVICE_MEMORY_ENTRIES (DEVICE_MEMORY_SIZE/DEVICE_MEMORY_ENTRY_SIZE)
+
+//#define FIRST_AVAILABLE_SIZE_ENTRY(Addr)  (DEVICE_MEMORY_ENTRY_SIZE - (Addr%DEVICE_MEMORY_ENTRY_SIZE))
  
 static dev_t dev;
 static struct cdev c_dev;
@@ -98,11 +100,6 @@ struct device *dev_ret;
 
 static int size = 0;
 static u64 SWAddr = 0;
-
-static u8 * dev_data_dma_alloc_coherent_to_device;
-static u8 * dev_data_dma_alloc_coherent_from_device;
-
-static void __iomem* ioremap_res; 
 
 static u8 * dev_data[DEVICE_MEMORY_ENTRIES];
 static u32 NumberOfServeChuncks = 0;
@@ -114,9 +111,6 @@ static u8 ret;
 static int i = 0;
 
 bool device_busy;
-
-static bool dma_to_device_active;
-static bool dma_from_device_active;
 
 dma_addr_t bus_addr_to_device;
 dma_addr_t bus_addr_from_device;
@@ -131,28 +125,22 @@ static int my_close(struct inode *i, struct file *f)
 }
 
 
-void ramdevice_init(void)
+int ramdevice_init(void)
 {
-    dma_to_device_active = 0;
-    dma_from_device_active = 0;
-    ioremap_res = ioremap(BASE, ADDR_SIZE);
-    dev_data_dma_alloc_coherent_to_device = dma_alloc_coherent(dev_ret, DEVICE_MEMORY_ENTRY_SIZE, &bus_addr_to_device, GFP_KERNEL);
-    if (dma_mapping_error(dev_ret, bus_addr_to_device)){
-      printk(KERN_ALERT "\n\n\n---------- dma_MAP_ERROR (bus_addr_to_device): %pa\n\n\n\n",&bus_addr_to_device);
+    for(i=0;i<DEVICE_MEMORY_ENTRIES;i++){
+      dev_data[i] = kmalloc(DEVICE_MEMORY_ENTRY_SIZE,GFP_DMA);
+      if (dev_data[i] == NULL)
+	  return -ENOMEM;
     }
-    
-    dev_data_dma_alloc_coherent_from_device = dma_alloc_coherent(dev_ret, DEVICE_MEMORY_ENTRY_SIZE, &bus_addr_from_device, GFP_KERNEL);
-    if (dma_mapping_error(dev_ret, bus_addr_from_device)){
-      printk(KERN_ALERT "\n\n\n---------- dma_MAP_ERROR (bus_addr_from_device): %pa\n\n\n\n",&bus_addr_from_device);
-    }
-  
+    return DEVICE_MEMORY_ENTRY_SIZE;
 }
 
 
 void ramdevice_cleanup(void)
 {
-    dma_free_coherent(dev_ret, DEVICE_MEMORY_ENTRY_SIZE, dev_data_dma_alloc_coherent_to_device, bus_addr_to_device);
-    dma_free_coherent(dev_ret, DEVICE_MEMORY_ENTRY_SIZE, dev_data_dma_alloc_coherent_from_device, bus_addr_from_device);
+    for(i=0;i<DEVICE_MEMORY_ENTRIES;i++){
+      kfree(dev_data[i]);
+    }
 }
 
 
@@ -161,7 +149,8 @@ irq_handler_t mydev_isr(int irq, void *device_id, struct pt_regs *regs)
 {
   u32 ChunckSize;
   device_busy = 0;
-  if(dma_to_device_active != 0){
+  if(bus_addr_to_device != 0){
+    dma_unmap_single(dev_ret, bus_addr_to_device, DEVICE_MEMORY_ENTRY_SIZE, DMA_TO_DEVICE);
     if(NumberOfRemainderChuncks > 0){
 	  if((NumberOfRemainderChuncks == 1)&&(size%DEVICE_MEMORY_ENTRY_SIZE > 0)) //! The last Chunck !//
 	    ChunckSize = size%DEVICE_MEMORY_ENTRY_SIZE;
@@ -170,34 +159,25 @@ irq_handler_t mydev_isr(int irq, void *device_id, struct pt_regs *regs)
 	  
 	  NumberOfRemainderChuncks--; //! Serve the Chunck !//
 	  NumberOfServeChuncks++;
-	  
-	  dma_sync_single_for_cpu(dev_ret, bus_addr_to_device, DEVICE_MEMORY_ENTRY_SIZE, DMA_TO_DEVICE);
-	  
-	  if(copy_from_user((u8 *)dev_data_dma_alloc_coherent_to_device, (u8 *)dev_data[NumberOfServeChuncks], ChunckSize*sizeof(u8)))
-	    return (irq_handler_t) IRQ_HANDLED;
-	  
-	  dma_sync_single_for_device(dev_ret, bus_addr_to_device, DEVICE_MEMORY_ENTRY_SIZE, DMA_TO_DEVICE);
+	  bus_addr_to_device = dma_map_single(dev_ret, (u8 *) dev_data[NumberOfServeChuncks], DEVICE_MEMORY_ENTRY_SIZE, DMA_TO_DEVICE);
+	  if (dma_mapping_error(dev_ret, bus_addr_to_device)){
+	    printk(KERN_ALERT "\n\n\n---------- dma_MAP_ERROR: %pa\n\n\n\n",&bus_addr_to_device);
+	  }
 	      
 	  //! Start DMA to set the Data to Device !//
-	  iowrite32((unsigned long) ChunckSize, ioremap_res + DMA_DATA_SIZE);
-	  iowrite32((unsigned long) SWAddr, ioremap_res + DMA_SWADDR);
-	  iowrite32((unsigned long) NumberOfServeChuncks, ioremap_res + DMA_NUMBER_OF_CHUNCK);
-	  iowrite32(cpu_to_le32(bus_addr_to_device), ioremap_res + DMA_TRANSFER_TO_DEVICE);
+	  iowrite32((unsigned long) ChunckSize, ioremap(BASE, ADDR_SIZE)+ DMA_DATA_SIZE);
+	  iowrite32((unsigned long) SWAddr, ioremap(BASE, ADDR_SIZE)+ DMA_SWADDR);
+	  iowrite32((unsigned long) NumberOfServeChuncks, ioremap(BASE, ADDR_SIZE)+ DMA_NUMBER_OF_CHUNCK);
+	  iowrite32(cpu_to_le32(bus_addr_to_device), ioremap(BASE, ADDR_SIZE) + DMA_TRANSFER_TO_DEVICE);
     }
     else{
-      dma_to_device_active = 0;
+      bus_addr_to_device = 0;
     }
   }
   
   
-  if(dma_from_device_active != 0){
-    if(NumberOfRemainderChuncksFromDevice == 0) //! The last Chunck !//
-      ChunckSize = size%DEVICE_MEMORY_ENTRY_SIZE;
-    else
-      ChunckSize = DEVICE_MEMORY_ENTRY_SIZE;
-    
-    if (copy_to_user((u8 *)dev_data[NumberOfServeChuncksFromDevice],(u8 *)dev_data_dma_alloc_coherent_from_device, ChunckSize*sizeof(u8)))
-      return (irq_handler_t) IRQ_HANDLED;
+  if(bus_addr_from_device != 0){
+    dma_unmap_single(dev_ret, bus_addr_from_device, DEVICE_MEMORY_ENTRY_SIZE, DMA_FROM_DEVICE);
     if(NumberOfRemainderChuncksFromDevice > 0){
 	  if((NumberOfRemainderChuncksFromDevice == 1)&&(size%DEVICE_MEMORY_ENTRY_SIZE > 0)) //! The last Chunck !//
 	    ChunckSize = size%DEVICE_MEMORY_ENTRY_SIZE;
@@ -206,15 +186,19 @@ irq_handler_t mydev_isr(int irq, void *device_id, struct pt_regs *regs)
 	  
 	  NumberOfRemainderChuncksFromDevice--; //! Serve the Chunck !//
 	  NumberOfServeChuncksFromDevice++;
+	  bus_addr_from_device = dma_map_single(dev_ret, (u8 *) dev_data[NumberOfServeChuncksFromDevice], DEVICE_MEMORY_ENTRY_SIZE, DMA_FROM_DEVICE);
+	  if (dma_mapping_error(dev_ret, bus_addr_from_device)){
+	    printk(KERN_ALERT "\n\n\n---------- dma_MAP_ERROR: %pa\n\n\n\n",&bus_addr_from_device);
+	  }
 	      	      
 	  //! Start DMA to set the Data from Device !//
-	  iowrite32((unsigned long) ChunckSize, ioremap_res + DMA_DATA_SIZE);
-	  iowrite32((unsigned long) SWAddr, ioremap_res + DMA_SWADDR);
-	  iowrite32((unsigned long) NumberOfServeChuncksFromDevice, ioremap_res + DMA_NUMBER_OF_CHUNCK);
-	  iowrite32(cpu_to_le32(bus_addr_from_device), ioremap_res + DMA_TRANSFER_FROM_DEVICE);
+	  iowrite32((unsigned long) ChunckSize, ioremap(BASE, ADDR_SIZE)+ DMA_DATA_SIZE);
+	  iowrite32((unsigned long) SWAddr, ioremap(BASE, ADDR_SIZE)+ DMA_SWADDR);
+	  iowrite32((unsigned long) NumberOfServeChuncksFromDevice, ioremap(BASE, ADDR_SIZE)+ DMA_NUMBER_OF_CHUNCK);
+	  iowrite32(cpu_to_le32(bus_addr_from_device), ioremap(BASE, ADDR_SIZE) + DMA_TRANSFER_FROM_DEVICE);
     }
     else{
-      dma_from_device_active = 0;
+      bus_addr_from_device = 0;
     }
   }
   return (irq_handler_t) IRQ_HANDLED;
@@ -237,10 +221,12 @@ static long my_ioctl(struct file *f, unsigned int cmd, unsigned long arg)
         case QUERY_GET_DATA:
 	    //! Copy the Data to UserSpace !//
 	    for(i=0;i<size/DEVICE_MEMORY_ENTRY_SIZE;i++){
-	      dev_data[i] = (u8 *)(arg +i*DEVICE_MEMORY_ENTRY_SIZE); //copy the userspace pointer
+	      if (copy_to_user((u8 *)(arg +i*DEVICE_MEMORY_ENTRY_SIZE),(u8 *)dev_data[i], DEVICE_MEMORY_ENTRY_SIZE*sizeof(u8)))
+		  return -EACCES;
 	    }
 	    if(size%DEVICE_MEMORY_ENTRY_SIZE > 0){ //! Copy the last chunck of Data !//
-	      dev_data[i] = (u8 *)(arg +i*DEVICE_MEMORY_ENTRY_SIZE); //copy the userspace pointer
+	      if (copy_to_user((u8 *)(arg +i*DEVICE_MEMORY_ENTRY_SIZE),(u8 *)dev_data[i], (size%DEVICE_MEMORY_ENTRY_SIZE)*sizeof(u8)))
+		  return -EACCES;
 	    }
             break;
 	    
@@ -259,18 +245,22 @@ static long my_ioctl(struct file *f, unsigned int cmd, unsigned long arg)
 	      NumberOfRemainderChuncksFromDevice--; //! Serve the first Chunck !//
 	      NumberOfServeChuncksFromDevice = 0;
 	      
-	      dma_from_device_active = 1;
+	      bus_addr_from_device = dma_map_single(dev_ret, (u8 *) dev_data[0], DEVICE_MEMORY_ENTRY_SIZE, DMA_FROM_DEVICE);
+	      
+	      if (dma_mapping_error(dev_ret, bus_addr_from_device)){
+		printk(KERN_ALERT "\n\n\n---------- dma_MAP_ERROR: %pa\n\n\n\n",&bus_addr_from_device);
+	      }
 	      	      
 	      //! Start DMA to set the Data to Host !//
-	      iowrite32((unsigned long) FirstChunckSize, ioremap_res + DMA_DATA_SIZE);
-	      iowrite32((unsigned long) SWAddr, ioremap_res + DMA_SWADDR);
-	      iowrite32((unsigned long) NumberOfServeChuncksFromDevice, ioremap_res + DMA_NUMBER_OF_CHUNCK);
-	      iowrite32(cpu_to_le32(bus_addr_from_device), ioremap_res + DMA_TRANSFER_FROM_DEVICE);
+	      iowrite32((unsigned long) FirstChunckSize, ioremap(BASE, ADDR_SIZE)+ DMA_DATA_SIZE);
+	      iowrite32((unsigned long) SWAddr, ioremap(BASE, ADDR_SIZE)+ DMA_SWADDR);
+	      iowrite32((unsigned long) NumberOfServeChuncksFromDevice, ioremap(BASE, ADDR_SIZE)+ DMA_NUMBER_OF_CHUNCK);
+	      iowrite32(cpu_to_le32(bus_addr_from_device), ioremap(BASE, ADDR_SIZE) + DMA_TRANSFER_FROM_DEVICE);
 	    
             break;
 	    
 	case DMA_FROM_DEVICE_WAIT:
-	    if(dma_from_device_active != 0)
+	    if(bus_addr_from_device != 0)
 	      ret = 1;
 	    else
 	      ret = 0;
@@ -289,7 +279,7 @@ static long my_ioctl(struct file *f, unsigned int cmd, unsigned long arg)
 	    
 	    
         case QUERY_CALL_DEVICE:
-	    if(dma_to_device_active == 0){
+	    if(bus_addr_to_device == 0){
 	      //! OK! DMA Transaction is completed !//
 	      ret = 0;
 	      device_busy = 1;
@@ -305,7 +295,7 @@ static long my_ioctl(struct file *f, unsigned int cmd, unsigned long arg)
             break;
 	    
 	case DMA_TO_DEVICE_WAIT: //! Check if previous DMA transactions are pending !//
-	    if(dma_to_device_active != 0)
+	    if(bus_addr_to_device != 0)
 	      ret = 1;
 	    else
 	      ret = 0;
@@ -320,29 +310,29 @@ static long my_ioctl(struct file *f, unsigned int cmd, unsigned long arg)
 	    FirstChunckSize = size%DEVICE_MEMORY_ENTRY_SIZE;
 	    for(i=0;i<size/DEVICE_MEMORY_ENTRY_SIZE;i++){
 	      FirstChunckSize = DEVICE_MEMORY_ENTRY_SIZE;
-	      dev_data[i] = (u8 *)(arg +i*DEVICE_MEMORY_ENTRY_SIZE); //copy the userspace pointer
-	      
+	      if (copy_from_user((u8 *)dev_data[i], (u8 *)(arg +i*DEVICE_MEMORY_ENTRY_SIZE), DEVICE_MEMORY_ENTRY_SIZE*sizeof(u8)))
+		  return -EACCES;
 	    }
 	    NumberOfRemainderChuncks = i;
 	    if(size%DEVICE_MEMORY_ENTRY_SIZE > 0){ //! Copy the last chunck of Data !//
 	      NumberOfRemainderChuncks++;
-	      dev_data[i] = (u8 *)(arg +i*DEVICE_MEMORY_ENTRY_SIZE); //copy the userspace pointer
-	      
+	      if (copy_from_user((u8 *)dev_data[i], (u8 *)(arg +i*DEVICE_MEMORY_ENTRY_SIZE), (size%DEVICE_MEMORY_ENTRY_SIZE)*sizeof(u8)))
+		  return -EACCES;
 	    }
-	    
-	   if(copy_from_user((u8 *)dev_data_dma_alloc_coherent_to_device, (u8 *)dev_data[0], FirstChunckSize*sizeof(u8)))
-	     return -EACCES;
 	     
 	   NumberOfRemainderChuncks--; //! Serve the first Chunck !//
 	   NumberOfServeChuncks = 0;
-	   
-	   dma_to_device_active = 1;
+	   bus_addr_to_device = dma_map_single(dev_ret, (u8 *) dev_data[0], DEVICE_MEMORY_ENTRY_SIZE, DMA_TO_DEVICE);
+	      
+	   if (dma_mapping_error(dev_ret, bus_addr_to_device)){
+	     printk(KERN_ALERT "\n\n\n---------- dma_MAP_ERROR: %pa\n\n\n\n",&bus_addr_to_device);
+	   }
 	      
 	   //! Start DMA to set the Data to Device !//
-	   iowrite32((unsigned long) FirstChunckSize, ioremap_res + DMA_DATA_SIZE);
-	   iowrite32((unsigned long) SWAddr, ioremap_res + DMA_SWADDR);
-	   iowrite32((unsigned long) NumberOfServeChuncks, ioremap_res + DMA_NUMBER_OF_CHUNCK);
-	   iowrite32(cpu_to_le32(bus_addr_to_device), ioremap_res + DMA_TRANSFER_TO_DEVICE);
+	   iowrite32((unsigned long) FirstChunckSize, ioremap(BASE, ADDR_SIZE)+ DMA_DATA_SIZE);
+	   iowrite32((unsigned long) SWAddr, ioremap(BASE, ADDR_SIZE)+ DMA_SWADDR);
+	   iowrite32((unsigned long) NumberOfServeChuncks, ioremap(BASE, ADDR_SIZE)+ DMA_NUMBER_OF_CHUNCK);
+	   iowrite32(cpu_to_le32(bus_addr_to_device), ioremap(BASE, ADDR_SIZE) + DMA_TRANSFER_TO_DEVICE);
         break;
 	    
 	    
@@ -405,7 +395,7 @@ static int __init SystemC_driver_init(void)
   
     int ret;
  
-    
+    ramdevice_init();
     
     if ( ! request_mem_region(BASE, ADDR_SIZE, "SystemC") ) {
 	      printk( KERN_ALERT "Unable to get io port at 0x%8X\n", BASE );
@@ -449,7 +439,6 @@ static int __init SystemC_driver_init(void)
         return PTR_ERR(dev_ret);
     }
     
-    ramdevice_init();
     
     
     return 0;
@@ -457,11 +446,12 @@ static int __init SystemC_driver_init(void)
  
 static void __exit SystemC_driver_exit(void)
 {
-    ramdevice_cleanup();
     device_destroy(cl, dev);
     class_destroy(cl);
     cdev_del(&c_dev);
     unregister_chrdev_region(dev, MINOR_CNT);
+    ramdevice_cleanup();
+    
     release_mem_region(BASE, ADDR_SIZE);
 }
  
