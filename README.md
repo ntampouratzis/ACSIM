@@ -36,7 +36,7 @@ cd objdir
 make
 sudo make install
 
-sed -i '74s/.*/#if defined(__SUNPRO_CC) \&\& (__SUNPRO_CC == 0x520)/' /usr/local/systemc-2.3.0/include/sysc/communication/sc_interface.h
+sudo sed -i '74s/.*/#if defined(__SUNPRO_CC) \&\& (__SUNPRO_CC == 0x520)/' /usr/local/systemc-2.3.0/include/sysc/communication/sc_interface.h
 
 echo "#SystemC 2.3.0 exports" >> ~/.bashrc
 echo "export SYSTEMC_HOME=/usr/local/systemc-2.3.0" >> ~/.bashrc
