@@ -38,6 +38,7 @@
  * Accelerator UserSpace Driver. You can referee in this paper 
  * https://ieeexplore.ieee.org/document/7927071/
  */
+
 #include "AccelDriver.h"
  
 #include "SystemC_driver.h"
@@ -50,6 +51,8 @@ void dma_from_device_wait();
 void dma_to_device_wait();
 void CreateDevice(char * dev);
 int doesDeviceExist(const char *filename);
+DevMemAddr AccelMalloc(size_t _size, const char _DevMemName);
+void AccelFree(DevMemAddr SWAddr);
 
 int fd;
 
@@ -211,7 +214,7 @@ void AccelCallDevice()
 {
     uint8_t ret;
     if (ioctl(fd, QUERY_CALL_DEVICE, (uint8_t *) &ret) == -1){
-        perror("query_apps ioctl AccelCallDevice");
+        perror("query_apps ioctl call_device");
     }
     if(ret == 1){
       AccelCallDevice();
