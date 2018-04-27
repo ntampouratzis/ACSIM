@@ -17,7 +17,7 @@ The kernel_build repository includes both ARM-32 and ARM-64 source kernel files 
 
 ```
 sudo apt-get update
-sudo apt-get install mercurial cmake scons swig gcc m4 python python-dev libgoogle-perftools-dev g++ gcc-arm-linux-gnueabi gcc-aarch64-linux-gnu
+sudo apt-get install mercurial cmake scons swig gcc m4 python python-dev libgoogle-perftools-dev g++ ncurses-dev gcc-arm-linux-gnueabi gcc-aarch64-linux-gnu
 ```
 
 
