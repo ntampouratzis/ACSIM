@@ -15,6 +15,14 @@ The kernel_build repository includes both ARM-32 and ARM-64 source kernel files 
 
 ## ACSIM Installation
 
+### Install required tools/libraries
+
+```
+sudo apt-get update
+sudo apt-get install mercurial cmake scons swig gcc m4 python python-dev libgoogle-perftools-dev g++
+```
+
+
 ### Download and install SystemC 2.3.0
 
 ```
