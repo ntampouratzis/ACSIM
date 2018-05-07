@@ -101,7 +101,7 @@ Finally, after Linux has been booted, you can simple execute the following comma
 
 ## Integration ACSIM with COSSIM
 ACSIM can be an extension of the COSSIM simulation framework and it can integrate, in a novel and efficient way,
-a combined system and network simulator with a SystemC simulator, in a transparent to the end-used way. In order to use ACSIM in COSSIM simulator, you need to install [COSSIM Framework](https://github.com/H2020-COSSIM/COSSIM_framework), and then replace the ACSIM cgem5 folder inside COSSIM folder.
+a combined system and network simulator with a SystemC simulator, in a transparent to the end-used way. In order to use ACSIM in COSSIM simulator, please follow the instructions in Chapter 1.1 & 1.2 of [COSSIM UserGuide](https://github.com/H2020-COSSIM/COSSIM_framework/blob/master/COSSIMUG_V1.1.pdf). To be noticed that you need to execute the [cossim_acsim_install.sh](https://github.com/ntampouratzis/ACSIM/cossim_acsim_install.sh) instead of [cossim_install.sh](https://github.com/H2020-COSSIM/COSSIM_framework/blob/master/cossim_install.sh).
 
 ## Acknowledgement
 Our work is published in this paper: T. Nikolaos, K. Georgopoulos and Y. Papaefstathiou, "A novel way to efficiently simulate complex full systems incorporating hardware accelerators," Design, Automation & Test in Europe Conference & Exhibition (DATE), 2017, Lausanne, 2017, pp. 658-661.
