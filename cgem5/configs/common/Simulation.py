@@ -422,6 +422,12 @@ def repeatSwitch(testsys, repeat_switch_cpu_list, maxtick, switch_freq):
             return exit_event
 
 def run(options, root, testsys, cpu_class):
+    NodeNum = options.nodeNum
+    # Remove existing files from previous simulation (COSSIM)
+    os.system("rm -rf $GEM5/McPat/mcpatNode" + str(NodeNum) + ".xml")
+    os.system("rm -rf $GEM5/McPat/mcpatOutput" + str(NodeNum) + ".txt")
+    os.system("rm -rf $GEM5/McPat/energy" + str(NodeNum) + ".txt")
+    # END Remove existing files from previous simulation (COSSIM)
     if options.checkpoint_dir:
         cptdir = options.checkpoint_dir
     elif m5.options.outdir:
@@ -703,6 +709,15 @@ def run(options, root, testsys, cpu_class):
     print 'Exiting @ tick %i because %s' % (m5.curTick(), exit_event.getCause())
     if options.checkpoint_at_end:
         m5.checkpoint(joinpath(cptdir, "cpt.%d"))
+        
+    # Execute the McPat Script (COSSIM)
+    McPATXml = options.McPATXml #Specify the McPAT xml ProcessorDescriptionFile
+    if McPATXml == "empty":
+        print "Power results are not available because McPat xml file is not exist!\n"
+    else:
+        print "Power results are calculated with xml file: " + McPATXml + "\n"
+        os.system("$GEM5/runMcPat.sh " + str(NodeNum) + " " + str(McPATXml) + " &")
+    # END Execute the McPat Script (COSSIM)    
 
     if not m5.options.interactive:
         sys.exit(exit_event.getCode())
