@@ -7,7 +7,7 @@ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j4
 cp vmlinux ../../kernels/binaries/vmlinux.aarch64.Accel
 
 echo Mount the .img ...
-sudo mount -o loop,offset=32256 $HOME/ACSIM/kernels/disks/aarch64-ubuntu-trusty-headless.img /mnt/
+sudo mount -o loop,offset=32256 ../../kernels/disks/aarch64-ubuntu-trusty-headless.img /mnt/
 
 echo Compile UserSpace Driver ...
 aarch64-linux-gnu-gcc -c kernel/AccelDriver.c
