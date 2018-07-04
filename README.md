@@ -76,7 +76,7 @@ So, you need to compile your prefered ARM kernel version using the following com
 
 
 ### ARM-32
-The following script compliles the kernel with [User Application](Application/TestApp.c) and mount it inside the linux-aarch32-ael.img. In addition, it creates vmlinux.aarch32.Accel and put it in kernels/binaries directory. The 2nd script (run32.sh) executes the ACSIM with the ARM-32 Kernel.
+The following script compliles the kernel with [User Application](kernel_build/Application/TestApp.c) and mount it inside the linux-aarch32-ael.img. In addition, it creates vmlinux.aarch32.Accel and put it in kernels/binaries directory. The 2nd script (run32.sh) executes the ACSIM with the ARM-32 Kernel.
 ```
 cd $HOME/ACSIM/kernel_build
 ./build32.sh
@@ -85,7 +85,7 @@ cd $HOME/ACSIM/cgem5
 ```
 
 ### ARM-64
-The following script compliles the kernel with [User Application](Application/TestApp.c) and mount it inside the aarch64-ubuntu-trusty-headless.img. In addition, it creates vmlinux.aarch64.Accel and put it in kernels/binaries directory. The 2nd script (run64.sh) executes the ACSIM with the ARM-64 Kernel.
+The following script compliles the kernel with [User Application](kernel_build/Application/TestApp.c) and mount it inside the aarch64-ubuntu-trusty-headless.img. In addition, it creates vmlinux.aarch64.Accel and put it in kernels/binaries directory. The 2nd script (run64.sh) executes the ACSIM with the ARM-64 Kernel.
 ```
 cd $HOME/ACSIM/kernel_build
 ./build64.sh
