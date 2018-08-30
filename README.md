@@ -93,7 +93,7 @@ cd $HOME/ACSIM/cgem5
 ./run64.sh
 ```
 
-Finally, after Linux has been booted, you can simple execute the following command from inside the Linux.
+Finally, after Linux has been booted, you can simple execute the following command from the simulated Linux.
 ```
 ./AccelApp
 ```
